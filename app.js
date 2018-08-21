@@ -40,7 +40,6 @@ app.post('/new/player', (req, res) => {
       score: 0
     }
   }
-  console.log(options)
   request(options)
     .then(() => {
       res.send({
@@ -48,11 +47,10 @@ app.post('/new/player', (req, res) => {
       })
     })
     .catch(error => {
-      console.log('ERROR', error)
       res.send({
         message: `failed: ${error}`
       })
     })
 })
 
-app.listen(PORT, () => console.log(`App listening on port ${PORT}!`))
+app.listen(PORT, () => console.log(`App listening on this port here: ${PORT}!`))
