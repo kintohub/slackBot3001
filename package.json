@@ -2,10 +2,10 @@
   "name": "slackBot3001",
   "version": "0.1.0",
   "description": "A simple slackbot to handle slash commands",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
-    "prod": "PORT=80 node index.js"
+    "start": "node app.js",
+    "prod": "PORT=80 node app.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,11 @@
   },
   "homepage": "https://github.com/kintohub/slackBot3001#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "morgan": "^1.9.0",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5"
   }
 }
