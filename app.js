@@ -113,7 +113,7 @@ app.post('/get-player', (req, res) => {
  * @api {post} /todays-winner Adds new player to the league
  * @apiParam {String} text the entered text from the slash command containing only the username to search for
  * @apiName addTodaysWinner
- * @apiSuccess (200) {Object} returns a slack message showing the users new score
+ * @apiSuccess (200) {Object} returns a slack message showing the players new score
  */
 app.post('/todays-winner', (req, res) => {
   const text = req.body.text
