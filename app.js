@@ -77,7 +77,7 @@ app.post('/add-player', (req, res) => {
 
 /**
  * @api {post} /get-player Adds new player to the league
- * @apiParam {String} text the entered text from the slash command containing only the username to search for
+ * @apiParam {String} text the entered text from the slash command containing only the username of the player to search for
  * @apiName getPlayerDetails
  * @apiSuccess (200) {Object} returns the confirmation message to be shown in slack
  */
