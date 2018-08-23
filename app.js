@@ -21,6 +21,14 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // for logging in development locally
 app.use(morgan('combined'))
+const logError = requestId => {
+  console.log(
+    JSON.stringify({
+      kinto_request_id: requestId,
+      error: error
+    })
+  )
+}
 
 /**
  * @api {get} /hello/{name} Prints "Hello {name}"
@@ -43,8 +51,6 @@ app.get('/hello/:name', (req, res) =>
 app.post('/add-player', (req, res) => {
   const text = req.body.text
   const username = text.match(userSlackId).toString()
-
-  console.log(username)
   const options = {
     method: 'POST',
     uri: `${databaseMicroserviceUrl}/create`,
@@ -69,6 +75,8 @@ app.post('/add-player', (req, res) => {
       })
     })
     .catch(error => {
+      const requestId = req.get('kinto-request-id')
+      logError(requestId)
       res.send({
         message: `failed: ${error}`
       })
@@ -103,7 +111,8 @@ app.post('/get-player', (req, res) => {
       })
     },
     error => {
-      console.log(error)
+      const requestId = req.get('kinto-request-id')
+      logError(requestId)
       res.send({ error: `${error}` })
     }
   )
@@ -140,6 +149,8 @@ app.post('/todays-winner', (req, res) => {
       })
     },
     error => {
+      const requestId = req.get('kinto-request-id')
+      logError(requestId)
       res.send({ error })
     }
   )
@@ -200,6 +211,8 @@ app.post('/all', (req, res) => {
       })
     },
     error => {
+      const requestId = req.get('kinto-request-id')
+      logError(requestId)
       res.send({ error: `${error}` })
     }
   )
@@ -233,6 +246,8 @@ app.post('/player-remove', (req, res) => {
       })
     },
     error => {
+      const requestId = req.get('kinto-request-id')
+      logError(requestId)
       res.send({ error: `${error}` })
     }
   )
