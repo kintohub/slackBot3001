@@ -157,8 +157,7 @@ app.post('/todays-winner', (req, res) => {
 })
 
 /**
- * @api {post} /todays-winner Adds new player to the league
- * @apiParam {String} text the entered text from the slash command containing only the username to search for
+ * @api {post} /all Adds new player to the league
  * @apiName getAllPlayerDetails
  * @apiSuccess (200) {Object} returns a slack message showing a complete list of all the players in the league
  */
