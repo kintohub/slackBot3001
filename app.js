@@ -19,9 +19,8 @@ const databaseMicroserviceUrl = `https://public.api.staging.kintohub.com/${KINTO
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// for logging in development locally
-app.use(morgan('combined'))
-const logError = requestId => {
+// for logging on KintoHub
+const logError = (requestId, error) => {
   console.log(
     JSON.stringify({
       kinto_request_id: requestId,
@@ -76,7 +75,7 @@ app.post('/add-player', (req, res) => {
     })
     .catch(error => {
       const requestId = req.get('kinto-request-id')
-      logError(requestId)
+      logError(requestId, error)
       res.send({
         message: `failed: ${error}`
       })
@@ -112,7 +111,7 @@ app.post('/get-player', (req, res) => {
     },
     error => {
       const requestId = req.get('kinto-request-id')
-      logError(requestId)
+      logError(requestId, error)
       res.send({ error: `${error}` })
     }
   )
@@ -150,7 +149,7 @@ app.post('/todays-winner', (req, res) => {
     },
     error => {
       const requestId = req.get('kinto-request-id')
-      logError(requestId)
+      logError(requestId, error)
       res.send({ error })
     }
   )
@@ -211,7 +210,7 @@ app.post('/all', (req, res) => {
     },
     error => {
       const requestId = req.get('kinto-request-id')
-      logError(requestId)
+      logError(requestId, error)
       res.send({ error: `${error}` })
     }
   )
@@ -246,7 +245,7 @@ app.post('/player-remove', (req, res) => {
     },
     error => {
       const requestId = req.get('kinto-request-id')
-      logError(requestId)
+      logError(requestId, error)
       res.send({ error: `${error}` })
     }
   )
