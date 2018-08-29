@@ -2,19 +2,21 @@ require('dotenv').config()
 const express = require('express')
 const request = require('request-promise-native')
 const bodyParser = require('body-parser')
-const morgan = require('morgan')
 const app = express()
+
+const helpers = require('./helpers/helper')
 
 // reg-ex to get userId from slack name
 const userSlackId = /([A-Z])\w+/g
 
 // env variables that will become custom params
-const PORT = process.env.PORT || '8000'
+const PORT = process.env.PORT || '3000'
 const KINTOHUB_CLIENTID = process.env.KINTOHUB_CLIENTID
 const KINTOHUB_MICROSERVICE = process.env.KINTOHUB_MICROSERVICE
 
 // kintocrud url created using client id and microservice name
 const databaseMicroserviceUrl = `https://public.api.staging.kintohub.com/${KINTOHUB_CLIENTID}/${KINTOHUB_MICROSERVICE}`
+// const databaseMicroserviceUrl = 'https://backendcrud.localtunnel.me'
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -28,18 +30,6 @@ const logError = (requestId, error) => {
     })
   )
 }
-
-/**
- * @api {get} /hello/{name} Prints "Hello {name}"
- * @apiName HelloWorld
- * @apiParam (Url) {String} name the name to print
- * @apiSuccess (200) {String} message the hello {name} message
- */
-app.get('/hello/:name', (req, res) =>
-  res.send({
-    message: `Hello ${req.params.name}`
-  })
-)
 
 /**
  * @api {post} /add-player Adds new player to the league
@@ -167,40 +157,26 @@ app.post('/all', (req, res) => {
     json: true
   }).then(
     response => {
-      const emojis = ['🥇', '🥈', '🥉', '💩', '😘', '👍', '💃', '🤦']
-      const getColor = (i, score) => {
-        if (i <= 3) {
-          return 'good'
-        }
-        if (score === 0) {
-          return 'danger'
-        } else {
-          return 'default'
-        }
-      }
-      let attachments = [{ pretext: 'All the Towerfall Scores!' }]
+      response.sort(function(a, b) {
+        return b.score - a.score
+      })
 
-      response
-        .sort(function(a, b) {
-          return a.score - b.score
-        })
-        .reverse()
-
-      response.forEach((x, i) => {
-        attachments.push({
-          color: `${getColor(i, x.score)}`,
+      const attachments = response.map((player, index) => {
+        return {
+          color: `${helpers.getColor(index, player.score)}`,
           fields: [
             {
-              value: `${emojis[i] || '😅'}${' '} <@${x.name}>`,
+              value: helpers.getEmojiAndText(index, player),
               short: true
             },
             {
-              value: `${x.score}`,
+              value: `${player.score}`,
               short: true
             }
           ]
-        })
+        }
       })
+      attachments.unshift({ pretext: 'All the Towerfall Scores!' })
 
       res.send({
         response_type: 'in_channel',
