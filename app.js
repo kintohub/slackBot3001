@@ -51,7 +51,7 @@ app.post('/add-player', (req, res) => {
   }
   request(options)
     .then(response => {
-      res.type('json').send({
+      res.json({
         response_type: 'in_channel',
         attachments: [
           {
@@ -66,7 +66,7 @@ app.post('/add-player', (req, res) => {
     .catch(error => {
       const requestId = req.get('kinto-request-id')
       logError(requestId, error)
-      res.type('json').send({
+      res.json({
         message: `failed: ${error}`
       })
     })
@@ -87,7 +87,7 @@ app.post('/get-player', (req, res) => {
     json: true
   }).then(
     response => {
-      res.type('json').send({
+      res.json({
         response_type: 'in_channel',
         attachments: [
           {
@@ -123,7 +123,7 @@ app.post('/todays-winner', (req, res) => {
   }).then(
     response => {
       const winner = response
-      res.type('json').send({
+      res.json({
         response_type: 'in_channel',
         attachments: [
           {
@@ -177,7 +177,7 @@ app.post('/all', (req, res) => {
         }
       })
       attachments.unshift({ pretext: 'All the Towerfall Scores!' })
-      res.type('json').send({
+      res.json({
         response_type: 'in_channel',
         reply_broadcast: true,
         attachments: attachments
@@ -221,7 +221,7 @@ app.post('/player-remove', (req, res) => {
     error => {
       const requestId = req.get('kinto-request-id')
       logError(requestId, error)
-      res.type('json').send({ error: `${error}` })
+      res.json({ error: `${error}` })
     }
   )
 })
