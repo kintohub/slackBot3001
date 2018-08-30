@@ -170,7 +170,7 @@ app.post('/all', (req, res) => {
               short: true
             },
             {
-              value: `${player.score}`,
+              value: player.score,
               short: true
             }
           ]
