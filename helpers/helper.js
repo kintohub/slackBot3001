@@ -12,5 +12,5 @@ exports.getColor = (index, score) => {
 }
 
 exports.getEmojiAndText = (index, player) => {
-  return `${emojis[index] || '😅'}' '<@${player.name}>`
+  return `${emojis[index] || '😅'}${' '}<@${player.name}>`
 }
