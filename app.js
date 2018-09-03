@@ -15,8 +15,8 @@ const KINTOHUB_CLIENTID = process.env.KINTOHUB_CLIENTID
 const KINTOHUB_MICROSERVICE = process.env.KINTOHUB_MICROSERVICE
 
 // kintocrud url created using client id and microservice name
-const databaseMicroserviceUrl = `https://public.api.staging.kintohub.com/${KINTOHUB_CLIENTID}/${KINTOHUB_MICROSERVICE}`
-// const databaseMicroserviceUrl = 'https://backendcrud.localtunnel.me'
+// const databaseMicroserviceUrl = `https://public.api.staging.kintohub.com/${KINTOHUB_CLIENTID}/${KINTOHUB_MICROSERVICE}`
+const databaseMicroserviceUrl = 'https://backendcrud.localtunnel.me'
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -151,13 +151,58 @@ app.post('/todays-winner', (req, res) => {
  * @apiSuccess (200) {Object} returns a slack message showing the updated league
  */
 app.post('/todays-scores', (req, res) => {
-  console.log(req.body)
   const text = req.body.text
-  console.log(text)
   const usernames = text.match(userSlackId)
   const namesAndScores = text.split(',')
-  console.log(usernames)
-  console.log(namesAndScores)
+  const scores = namesAndScores.map(x => {
+    return x.substr(x.length - 1)
+  })
+  const players = usernames.map((player, index) => {
+    return {
+      username: usernames[index],
+      score: parseInt(scores[index])
+    }
+  })
+
+  request({
+    method: 'PUT',
+    uri: `${databaseMicroserviceUrl}/update-all`,
+    body: { players },
+    json: true
+  }).then(
+    response => {
+      response.sort(function(a, b) {
+        return b.score - a.score
+      })
+
+      const attachments = response.map((player, index) => {
+        return {
+          color: `${helpers.getColor(index, player.score)}`,
+          fields: [
+            {
+              value: helpers.getEmojiAndText(index, player),
+              short: true
+            },
+            {
+              value: player.score,
+              short: true
+            }
+          ]
+        }
+      })
+      attachments.unshift({
+        pretext: `Here are all the ✨NEW✨ scores after todays EPIC battle!`
+      })
+      res.set('Content-Type', 'application/json').send({
+        response_type: 'in_channel',
+        reply_broadcast: true,
+        attachments: attachments
+      })
+    },
+    error => {
+      console.log(error)
+    }
+  )
 })
 
 /**
