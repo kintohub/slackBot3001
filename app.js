@@ -151,6 +151,7 @@ app.post('/todays-winner', (req, res) => {
  * @apiSuccess (200) {Object} returns a slack message showing a complete list of all the players in the league
  */
 app.post('/all', (req, res) => {
+  const totalPlayers = req.get('total-players')
   request({
     method: 'GET',
     uri: `${databaseMicroserviceUrl}/all`,
@@ -176,7 +177,9 @@ app.post('/all', (req, res) => {
           ]
         }
       })
-      attachments.unshift({ pretext: 'All the Towerfall Scores!' })
+      attachments.unshift({
+        pretext: `All the Towerfall Scores! Currently there are ${totalPlayers} active players`
+      })
       res.set('Content-Type', 'application/json').send({
         response_type: 'in_channel',
         reply_broadcast: true,
