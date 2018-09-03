@@ -147,6 +147,7 @@ app.post('/todays-winner', (req, res) => {
 
 /**
  * @api {post} /todays-scores logs all the scores for the day
+ * @apiParam {String} text the names and scores of the winners separated by commas
  * @apiName todaysScores
  * @apiSuccess (200) {Object} returns a slack message showing the updated league
  */
