@@ -15,8 +15,8 @@ const KINTOHUB_CLIENTID = process.env.KINTOHUB_CLIENTID
 const KINTOHUB_MICROSERVICE = process.env.KINTOHUB_MICROSERVICE
 
 // kintocrud url created using client id and microservice name
-// const databaseMicroserviceUrl = `https://public.api.staging.kintohub.com/${KINTOHUB_CLIENTID}/${KINTOHUB_MICROSERVICE}`
-const databaseMicroserviceUrl = 'https://backendcrud.localtunnel.me'
+const databaseMicroserviceUrl = `https://public.api.staging.kintohub.com/${KINTOHUB_CLIENTID}/${KINTOHUB_MICROSERVICE}`
+// const databaseMicroserviceUrl = 'https://backendcrud.localtunnel.me'
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
