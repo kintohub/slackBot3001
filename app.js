@@ -108,7 +108,7 @@ app.post('/get-player', (req, res) => {
 })
 
 /**
- * @api {post} /todays-winner Adds new player to the league
+ * @api {post} /todays-winner Adds increments the score of one person in the league
  * @apiParam {String} text the entered text from the slash command containing only the username to search for
  * @apiName addTodaysWinner
  * @apiSuccess (200) {Object} returns a slack message showing the players new score
@@ -146,8 +146,24 @@ app.post('/todays-winner', (req, res) => {
 })
 
 /**
+ * @api {post} /todays-scores logs all the scores for the day
+ * @apiName todaysScores
+ * @apiSuccess (200) {Object} returns a slack message showing the updated league
+ */
+app.post('/todays-scores', (req, res) => {
+  console.log(req.body)
+  const text = req.body.text
+  console.log(text)
+  const usernames = text.match(userSlackId)
+  const namesAndScores = text.split(',')
+  console.log(usernames)
+  console.log(namesAndScores)
+})
+
+/**
  * @api {post} /all Adds new player to the league
  * @apiName getAllPlayerDetails
+ * @apiHeader (Config) {String} total-players this is being added in kintohub to account for total players
  * @apiSuccess (200) {Object} returns a slack message showing a complete list of all the players in the league
  */
 app.post('/all', (req, res) => {
